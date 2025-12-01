@@ -47,8 +47,10 @@ In GitHub, XP is reflected through:
 - Joud Ali 
 - Mawadah Alahmadi 
 
+
 ## How to Run
 
 1. Clone the repository:
    ```bash
- https://github.com/salwa-xix/Laundry-System.git
+   git clone https://github.com//github.com/salwa-xix/Laundry-System.git
+ 
