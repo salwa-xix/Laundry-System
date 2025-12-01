@@ -51,4 +51,4 @@ In GitHub, XP is reflected through:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<username>/Laundry-System.git
+ https://github.com/<username>/Laundry-System.git](https://github.com/salwa-xix/Laundry-System.git
