@@ -24,6 +24,16 @@ public class Rating {
             return "Invalid rating. Please enter a value between 1 and 5.";
         }
 
+        Order order = Order.findOrderByID(orderID);
+
+        if (order == null) {
+            return "Order not found. Please check the order ID.";
+        }
+
+        if (!order.getStatus().equalsIgnoreCase("Picked up")) {
+            return "You can only rate your order after it has been Picked up.";
+        }
+
         Rating newRating = new Rating(orderID, comment, ratingScore);
         ratingRecords.add(newRating);
 
@@ -32,7 +42,6 @@ public class Rating {
         return "Thank you. You rated order #" + orderID +
                 " with " + ratingScore + " stars. Comment: " + comment;
     }
-
 
 
     private static void saveRatingForCustomer(int orderID, String comment, int ratingScore) {
@@ -47,7 +56,6 @@ public class Rating {
             System.out.println("Error saving rating: " + e.getMessage());
         }
     }
-
 
     public static void loadRatingsFromFile() {
 
