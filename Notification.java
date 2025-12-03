@@ -1,33 +1,33 @@
-package org.example;
+package CPIT251;
 
 public class Notification {
 
-    private String customerMsg;
-    private String employeeMsg;
+    private String customerMessage;
+    private String employeeMessage;
 
     public void prepare(Order order) {
         String status = order.getStatus();
         int OrderID = order.getOrderID();
 
         if (status.equalsIgnoreCase("Created")) {
-            customerMsg = "Your order #" + OrderID+ " has been created.";
+            customerMessage = "Your order #" + OrderID+ " has been created.";
         } else if (status.equalsIgnoreCase("In progress")) {
-            customerMsg = "Your order #" + OrderID + " is now in progress.";
+            customerMessage = "Your order #" + OrderID + " is now in progress.";
         } else if (status.equalsIgnoreCase("Ready")) {
-            customerMsg = "Your order #" + OrderID+ " is ready for pickup.";
-        } else if (status.equalsIgnoreCase("Cancelled")) {
-            customerMsg = "Your order #" + OrderID + " has been cancelled.";
+            customerMessage= "Your order #" + OrderID+ " is ready.";
+        } else if (status.equalsIgnoreCase("Picked up")) {
+            customerMessage = "Your order #" + OrderID + " has been Picked up.";
         }
 
-        employeeMsg = "Order #" +OrderID + " changed to: " + status;
+        employeeMessage = "Order #" + OrderID + " changed to: " + status;
     }
 
+
     public String getCustomerMessage() {
-        return customerMsg;
+        return customerMessage;
     }
 
     public String getEmployeeMessage() {
-        return employeeMsg;
+        return employeeMessage;
     }
-
 }
