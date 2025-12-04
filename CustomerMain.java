@@ -5,6 +5,9 @@ import java.util.*;
 
 public class CustomerMain {
 
+
+    private static final String CURRENT_CUSTOMER_PHONE = "0500000000";
+
     public static void main(String[] args) {
 
         Rating.loadRatingsFromFile();
@@ -14,8 +17,9 @@ public class CustomerMain {
         int Customerchoice = -1;
 
         while (Customerchoice != 4) {
-            System.out.println("\n---- Laundry System ----");
-            System.out.println("---- Customer UI ----");
+            System.out.println("\n-------- Laundry System --------");
+            System.out.println("-------- Customer UI --------");
+            System.out.println("---- For Customer with Phone# 0500000000 ----");
             System.out.println("1) View my notifications");
             System.out.println("2) View past ratings");
             System.out.println("3) Rate my new order");
@@ -48,6 +52,8 @@ public class CustomerMain {
     }
 
 
+    // ----------------------------------------------------------
+
     private static void viewNotifications() {
 
         System.out.println("\n---- Your Notifications ----");
@@ -64,16 +70,20 @@ public class CustomerMain {
 
             while (read.hasNextLine()) {
 
-                hasNotifications = true;
-
                 String line = read.nextLine();
-                String[] parts = line.split(";", 2);
+                String[] parts = line.split(";", 3);
 
-                if (parts.length < 2) continue;
+                if (parts.length < 3) continue;
 
-                int orderID = Integer.parseInt(parts[0]);
-                String msg = parts[1];
+                String phoneInFile = parts[0];
+                int orderID = Integer.parseInt(parts[1]);
+                String msg = parts[2];
 
+                if (!phoneInFile.equals(CURRENT_CUSTOMER_PHONE)) {
+                    continue;
+                }
+
+                hasNotifications = true;
                 System.out.println("Order #" + orderID + " | " + msg);
             }
 
@@ -89,6 +99,8 @@ public class CustomerMain {
         }
     }
 
+
+    // ----------------------------------------------------------
 
     private static void viewPastRatings() {
         System.out.println("\n---- Your Ratings ----");
@@ -109,10 +121,10 @@ public class CustomerMain {
                     rating.getComment());
         }
 
-
         System.out.println("|----------|--------|------------------------------------------|");
     }
 
+    // ----------------------------------------------------------
 
     private static void rateNewOrder(Scanner input) {
 
@@ -123,7 +135,7 @@ public class CustomerMain {
             return;
         }
 
-        System.out.println("\nYour order #" + info.orderID + " is Picked up");
+        System.out.println("\nYour order #" + info.orderId + " is Picked up");
         System.out.println("Order details:");
         System.out.println("  Total price: " + info.totalPrice);
         System.out.println("  Status     : " + info.status);
@@ -151,12 +163,12 @@ public class CustomerMain {
         System.out.print("Add a comment: ");
         String comment = input.nextLine();
 
-
-        String ratingHistory = Rating.rateOrder(info.orderID, comment, ratingScore);
+        String ratingHistory = Rating.rateOrder(info.orderId, comment, ratingScore);
 
         System.out.println("\n" + ratingHistory);
     }
 
+    // ----------------------------------------------------------
 
     private static OrderInfo findNextUnratedOrder() {
 
@@ -174,16 +186,20 @@ public class CustomerMain {
                 String line = fileScanner.nextLine();
                 String[] parts = line.split(";");
 
-                if (parts.length < 3) continue;
+                if (parts.length < 4) continue;
 
-                int orderID = Integer.parseInt(parts[0]);
-                double price = Double.parseDouble(parts[1]);
-                String status = parts[2];
+                String phoneInFile = parts[0];
+                int orderID = Integer.parseInt(parts[1]);
+                double price = Double.parseDouble(parts[2]);
+                String status = parts[3];
+
+                if (!phoneInFile.equals(CURRENT_CUSTOMER_PHONE)) {
+                    continue;
+                }
 
                 if (status.equalsIgnoreCase("Picked up") && !ratedOrders.contains(orderID)) {
                     return new OrderInfo(orderID, price, status);
                 }
-
             }
 
         } catch (Exception e) {
@@ -192,17 +208,5 @@ public class CustomerMain {
 
         return null;
     }
-
-
-    private static class OrderInfo {
-        int orderID;
-        double totalPrice;
-        String status;
-
-        public OrderInfo(int orderID, double totalPrice, String status) {
-            this.orderID = orderID;
-            this.totalPrice = totalPrice;
-            this.status = status;
-        }
-    }
 }
+
