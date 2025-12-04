@@ -28,7 +28,8 @@ public class RatingTest {
 
     @Test
     public void testValidRating() {
-        Order order = new Order();
+        String customerPhone = "0500000000";
+        Order order = new Order(customerPhone);
         order.updateOrderStatus("Picked up");
         int id = order.getOrderID();
         int score = 5;
