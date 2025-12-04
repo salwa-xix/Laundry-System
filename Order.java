@@ -36,12 +36,15 @@ public class Order {
     private double totalPrice;
     private String status;
     private Notification notification;
+    private String customerPhone;
 
-    public Order() {
+
+    public Order(String customerPhone) {
         this.orderID = nextOrderID++;
         this.items = new ArrayList<>();
         this.totalPrice = 0;
         this.status = "Created";
+        this.customerPhone = customerPhone;
         this.notification = new Notification();
         this.notification.prepare(this);
         ordersRecord.add(this);
@@ -77,6 +80,9 @@ public class Order {
         return ordersRecord;
     }
 
+    public String getCustomerPhone() {
+        return customerPhone;
+    }
 
     public void addItem(int itemType, int serviceType, int quantity) {
 
@@ -153,11 +159,12 @@ public class Order {
     public void printItems() {
 
         System.out.println("\n----- Order Details -----");
-        System.out.println("|----------|----------------------|");
-        System.out.printf("| %-8s | %-20d |\n", "Order ID", orderID);
-        System.out.println("|----------|----------------------|");
-        System.out.printf("| %-8s | %-20s |\n", "Status", status);
-        System.out.println("|----------|----------------------|");
+        System.out.println("|---------------|----------------------|");
+        System.out.printf("| %-13s | %-20d |\n", "Order ID", orderID);
+        System.out.printf("| %-13s | %-20s |\n", "Customerphone", customerPhone);
+        System.out.printf("| %-13s | %-20s |\n", "Status", status);
+        System.out.println("|---------------|----------------------|");
+
 
         if (items.isEmpty()) {
             System.out.println("No items in this order.");
@@ -206,11 +213,11 @@ public class Order {
         return null;
     }
 
-    // loading from and writing in orders file' methods
-    private Order(int id, String status, double totalPrice) {
+    private Order(int id, String status, double totalPrice, String customerPhone) {
         this.orderID = id;
         this.status = status;
         this.totalPrice = totalPrice;
+        this.customerPhone = customerPhone;
         this.items = new ArrayList<>();
         this.notification = new Notification();
         this.notification.prepare(this);
@@ -260,9 +267,12 @@ public class Order {
                     String status = parts[2];
                     double total = Double.parseDouble(parts[3]);
 
-                    currentOrder = new Order(id, status, total);
+                    String customerPhone = "";
+                    if (parts.length >= 5) {
+                        customerPhone = parts[4];
+                    }
 
-                    // if recordType = ITEM
+                    currentOrder = new Order(id, status, total, customerPhone);
                 } else if (recordType.equals("ITEM") && parts.length >= 6 && currentOrder != null) {
                     int itemNumber = Integer.parseInt(parts[1]);
                     int itemType = Integer.parseInt(parts[2]);
@@ -285,12 +295,17 @@ public class Order {
         try (FileWriter orderFile = new FileWriter("all_orders.txt");
              PrintWriter orderWriter = new PrintWriter(orderFile)) {
 
-
             orderWriter.println("NEXT_ID;" + nextOrderID);
 
             for (Order order : ordersRecord) {
 
-                orderWriter.println("ORDER;" + order.orderID + ";" + order.status + ";" + order.totalPrice);
+                orderWriter.println("ORDER;"
+                        + order.orderID + ";"
+                        + order.status + ";"
+                        + order.totalPrice + ";"
+                        + order.customerPhone);
+
+
 
                 for (OrderItem item : order.items) {
 
